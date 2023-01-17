@@ -7,6 +7,8 @@ export const BASE_URL = {
 
 export const basicApi = axios.create({
   baseURL: `${BASE_URL.DEV}`,
-  timeout: 5,
-  headers: { "Content-Type": "application/json;charset=utf-8" },
+  headers: {
+    "Content-Type": "application/json",
+    authorization: `Bearer ${localStorage.getItem("token")}`,
+  },
 });

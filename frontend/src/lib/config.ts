@@ -1,4 +1,4 @@
-const API = {
+const config = {
   postSignUpInfo: "/users/create",
   postLogInInfo: "/users/login",
   deleteTodo: "/todos/:id",
@@ -8,4 +8,4 @@ const API = {
   getTodos: "/todos",
 };
 
-export default API;
+export default config;

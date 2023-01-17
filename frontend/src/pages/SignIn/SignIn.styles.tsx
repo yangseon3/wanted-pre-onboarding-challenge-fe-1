@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const LogInHeader = styled.div`
+export const SignInHeader = styled.div`
   width: 100vw;
   height: 100vh;
   display: flex;
@@ -8,12 +8,12 @@ export const LogInHeader = styled.div`
   justify-content: center;
   align-items: center;
 `;
-export const LogInPhrases = styled.div`
+export const SignInPhrases = styled.div`
   font-size: 50px;
   font-weight: bold;
 `;
 
-export const LogInForm = styled.form`
+export const SignInForm = styled.form`
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -21,7 +21,7 @@ export const LogInForm = styled.form`
   margin-bottom: 30px;
 `;
 
-export const LogInInput = styled.input`
+export const SignInInput = styled.input`
   width: 380px;
   height: 40px;
   margin-top: 15px;
@@ -29,7 +29,7 @@ export const LogInInput = styled.input`
   text-indent: 20px;
 `;
 
-export const LogInButton = styled.button`
+export const SignInButton = styled.button`
   width: 150px;
   height: 40px;
   margin-top: 10px;
@@ -40,10 +40,10 @@ export const LogInButton = styled.button`
   border-color: blue;
 `;
 
-export const LogInFooter = styled.div`
+export const SignInFooter = styled.div`
   margin-top: 30px;
 `;
 
-export const LogInContents = styled.div`
+export const SignInContents = styled.div`
   color: red;
 `;

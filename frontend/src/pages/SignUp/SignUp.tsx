@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-empty-function */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react/no-unescaped-entities */
@@ -5,9 +6,12 @@
 import React, { useState } from "react";
 import * as style from "./SignUp.styles";
 import { Link, useNavigate } from "react-router-dom";
-import { SignUpController } from "../../api/SignUp";
+import { handleSignUp } from "../../apis/apis";
 import { useMutation } from "react-query";
-import { SignUpForm } from "../../types/signUp";
+import { LOCAL_ERROR } from "../../lib/error";
+import isEmailValidate from "../../utils/isEmailValid";
+import isPasswordValidate from "../../utils/isPasswordValid";
+import isPasswordCheckValid from "../../utils/isPasswordValid";
 
 const SignUp = () => {
   const [passwordCheck, setPasswordCheck] = useState("");
@@ -30,33 +34,32 @@ const SignUp = () => {
 
   const { email, password } = userInfo;
 
-  const emailRegex = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/;
-  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/;
-
-  const isEmailValid = emailRegex.test(email);
-  const ispasswordValid = passwordRegex.test(password);
-  const isPasswordCheckValid = passwordRegex.test(passwordCheck);
+  const formValidator = () => {
+    const isEmailValid = isEmailValidate(email);
+    const isPasswordValid = isPasswordValidate(password);
+    const isPasswordCheck = isPasswordCheckValid(password);
+    setErrorMessage("email", isEmailValid ? "" : LOCAL_ERROR.EMAIL);
+    setErrorMessage("password", isPasswordValid ? "" : LOCAL_ERROR.PASSWORD);
+    setErrorMessage("passwordCheck", isPasswordCheck ? "" : LOCAL_ERROR.PASSWORD_MATCH);
+    return ![isEmailValid, isPasswordValid, isPasswordCheck].includes(false);
+  };
 
   const handleClickUserInfo = (e: { preventDefault: () => void }) => {
     e.preventDefault();
     postUserInfo.mutate(userInfo);
   };
 
-  const postUserInfo: SignUpForm = useMutation(SignUpController, {
-    onMutate: () => {},
-    onSuccess: (data) => {
-      const [err, result] = data;
-      if (!err) {
-        if (result.data[0] === true) {
-          navigate("/LogIn");
-        } else {
-          console.log(result);
-        }
-      }
+  const postUserInfo = useMutation(handleSignUp, {
+    onSuccess: () => {
+      alert("회원가입이 완료되었습니다");
+      navigate("/SignIn");
+    },
+    onError: () => {
+      alert(LOCAL_ERROR.SIGN_UP);
+      formValidator();
     },
   });
 
-  console.log(postUserInfo);
   return (
     <style.SignUpHeader>
       <style.SignUpPhrases>회원가입</style.SignUpPhrases>
@@ -86,14 +89,13 @@ const SignUp = () => {
           onChange={passwordCheckHandler}
         />
         <style.SignUpButton onClick={handleClickUserInfo}>SignUp</style.SignUpButton>
-
-        {isEmailValid || email.length === 0 || (
+        {isEmailValidate(email) || email.length === 0 || (
           <style.SignUpContents>"이메일 형식에 맞게 입력해 주세요"</style.SignUpContents>
         )}
-        {ispasswordValid || password.length === 0 || (
+        {isPasswordValidate(password) || password.length === 0 || (
           <style.SignUpContents>"비밀번호는 8자리 이상 입력해 주세요"</style.SignUpContents>
         )}
-        {isPasswordCheckValid || passwordCheck.length === 0 || (
+        {isPasswordCheckValid(passwordCheck) || passwordCheck.length === 0 || (
           <style.SignUpContents> "비밀번호가 서로 맞지 않습니다."</style.SignUpContents>
         )}
       </style.SignUpForm>
@@ -105,3 +107,6 @@ const SignUp = () => {
 };
 
 export default SignUp;
+function setErrorMessage(arg0: string, arg1: string) {
+  throw new Error("Function not implemented.");
+}
